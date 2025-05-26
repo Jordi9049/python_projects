@@ -1,0 +1,58 @@
+# Definition for a binary tree node.
+from typing import Optional
+
+
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+        
+class Solution:
+    def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+        if not root:
+            return
+
+        checkNew = root.left
+        root.left = root.right
+        root.right  = checkNew
+
+        self.invertTree(root.left)
+        self.invertTree(root.right)
+
+        return root
+
+
+if __name__ == "__main__":
+    # Build tree [4,2,7,1,3,6,9]
+    root = TreeNode(4)
+    root.left = TreeNode(2)
+    root.right = TreeNode(7)
+    root.left.left = TreeNode(1)
+    root.left.right = TreeNode(3)
+    root.right.left = TreeNode(6)
+    root.right.right = TreeNode(9)
+
+    sol = Solution()
+    inverted_tree = sol.invertTree(root)
+    # The tree is now inverted, should look like [4,7,2,9,6,3,1]
+
+    from collections import deque
+
+    def print_tree_level_order(root):
+        if not root:
+            print([])  # Print empty list if tree is empty
+            return
+        queue = deque([root])
+        result = []
+        while queue:
+            node = queue.popleft()
+            result.append(node.val)
+            if node.left:
+                queue.append(node.left)
+            if node.right:
+                queue.append(node.right)
+        print(result)
+
+    # Print the inverted tree in level order for verification
+    print_tree_level_order(inverted_tree)
